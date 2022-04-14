@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AlertCustomDialogCompose</string>
+    <string name="default_dialog_title">Alert Dialog with Style</string>
+    <string name="default_dialog_text">This dialog has buttons with custom style and aligned vertically as in Column. Properties set custom behaviour of a dialog such as dismissing when back button pressed or pressed outside of dialog</string>
+
+
+    <string name="cancel">Cancel</string>
+    <string name="okay">OK</string>
 </resources>
