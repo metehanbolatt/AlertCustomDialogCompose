@@ -3,7 +3,12 @@
     <string name="default_dialog_title">Alert Dialog with Style</string>
     <string name="default_dialog_text">This dialog has buttons with custom style and aligned vertically as in Column. Properties set custom behaviour of a dialog such as dismissing when back button pressed or pressed outside of dialog</string>
 
+    <string name="custom_dialog_text">To send a nearby place or your location, allow access to your location.</string>
+
+    <string name="alert_dialog_icon_description">Icon Description</string>
 
     <string name="cancel">Cancel</string>
     <string name="okay">OK</string>
+    <string name="not_now">Not Now</string>
+    <string name="_continue">Continue</string>
 </resources>
