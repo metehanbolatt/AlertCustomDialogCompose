@@ -1,6 +1,7 @@
 package com.metehanbolat.alertcustomdialogcompose
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -10,12 +11,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    AlertDialogAndCustomDialog()
+                    AlertDialogAndDialog()
                 }
             }
         }
@@ -43,12 +44,61 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AlertDialogAndCustomDialog() {
+fun AlertDialogAndDialog() {
+    var showAlertDialog by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = {
+                showAlertDialog = !showAlertDialog
+            }
+        ) {
+            Text(
+                text = stringResource(id = R.string.open_alert_dialog)
+            )
+        }
+        if (showAlertDialog) {
+            AlertDialogExample {
+                showAlertDialog = !showAlertDialog
+            }
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(
+            onClick = {
+                showDialog = !showDialog
+            }
+        ) {
+            Text(
+                text = stringResource(id = R.string.open_dialog)
+            )
+        }
+        if (showDialog) {
+            DialogExample(
+                onDismiss = {
+                    showDialog = !showDialog
+                    Toast.makeText(context, R.string.dialog_dismissed, Toast.LENGTH_SHORT).show()
+                },
+                onNegativeClick = {
+                    showDialog = !showDialog
+                    Toast.makeText(context, R.string.negative_button_clicked, Toast.LENGTH_SHORT).show()
 
+                },
+                onPositiveClick = {
+                    showDialog = !showDialog
+                    Toast.makeText(context, R.string.positive_button_clicked, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
 }
 
 @Composable
-fun DefaultAlertDialog(
+fun AlertDialogExample(
     onDismiss: emptyReturnUnit
 ) {
     AlertDialog(
@@ -69,8 +119,8 @@ fun DefaultAlertDialog(
         },
         buttons = {
             OutlinedButton(
-                onClick = onDismiss,
                 shape = RoundedCornerShape(percent = 30),
+                onClick = onDismiss,
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
@@ -79,15 +129,15 @@ fun DefaultAlertDialog(
             }
             Spacer(modifier = Modifier.width(8.dp))
             OutlinedButton(
-                onClick = onDismiss,
                 shape = RoundedCornerShape(percent = 30),
+                onClick = onDismiss,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    backgroundColor = Color(0xff8BC34A),
+                    contentColor = Color.White
+                ),
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    backgroundColor = Color(0xFF8BC34A),
-                    contentColor = Color.White
-                )
+                    .fillMaxWidth()
             ) {
                 Text(text = stringResource(id = R.string.okay))
             }
@@ -96,7 +146,7 @@ fun DefaultAlertDialog(
 }
 
 @Composable
-fun CustomAlertDialog(
+fun DialogExample(
     onDismiss: emptyReturnUnit,
     onNegativeClick: emptyReturnUnit,
     onPositiveClick: emptyReturnUnit
@@ -104,7 +154,7 @@ fun CustomAlertDialog(
     Dialog(
         onDismissRequest = onDismiss
     ) {
-        val color = Color(0xFF4DB64C)
+        val color = Color(0xff4DB6AC)
 
         Card(
             elevation = 8.dp,
@@ -118,50 +168,46 @@ fun CustomAlertDialog(
                         .background(color)
                 ) {
                     Icon(
+                        tint = Color.White,
                         painter = painterResource(id = R.drawable.ic_launcher_background),
-                        contentDescription = stringResource(id = R.string.alert_dialog_icon_description),
+                        contentDescription = null,
                         modifier = Modifier
-                            .graphicsLayer(
-                                scaleX = 1.2f,
-                                scaleY = 1.2f
-                            )
+                            .graphicsLayer(scaleX = 1.2f, scaleY = 1.2f)
                             .align(Alignment.Center)
                     )
                 }
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        Text(text = stringResource(id = R.string.custom_dialog_text))
+                        Text(stringResource(id = R.string.custom_dialog_text))
                     }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.not_now),
-                        color = color,
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = rememberRipple(color = Color.DarkGray),
-                                onClick = onNegativeClick
-                            )
-                            .padding(8.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = stringResource(id = R.string._continue),
-                        color = color,
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = rememberRipple(color = Color.DarkGray),
-                                onClick = onPositiveClick
-                            )
-                            .padding(8.dp)
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.not_now),
+                            color = color,
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = rememberRipple(color = Color.DarkGray),
+                                    onClick = onNegativeClick
+                                )
+                                .padding(8.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = stringResource(id = R.string._continue),
+                            color = color,
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = rememberRipple(color = Color.DarkGray),
+                                    onClick = onPositiveClick
+                                )
+                                .padding(8.dp)
+                        )
+                    }
                 }
             }
         }

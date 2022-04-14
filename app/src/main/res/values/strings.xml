@@ -7,6 +7,12 @@
 
     <string name="alert_dialog_icon_description">Icon Description</string>
 
+    <string name="open_alert_dialog">Open Alert Dialog</string>
+    <string name="open_dialog">Open Dialog</string>
+    <string name="dialog_dismissed">Dialog Dismissed</string>
+    <string name="negative_button_clicked">Negative Button Clicked!</string>
+    <string name="positive_button_clicked">Positive Button Clicked!</string>
+
     <string name="cancel">Cancel</string>
     <string name="okay">OK</string>
     <string name="not_now">Not Now</string>
